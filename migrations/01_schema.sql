@@ -27,3 +27,13 @@ CREATE TABLE properties(
   postal_code VARCHAR(255),
   is_active BOOLEAN DEFAULT true
 );
+
+DROP TABLE IF EXISTS reservations CASCADE;
+
+CREATE TABLE reservations(
+  id SERIAL PRIMARY KEY,
+  start_date DATE,
+  end_date DATE,
+  property_id INTEGER REFERENCES properties(id) ON DELETE CASCADE,
+  guest_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+);
