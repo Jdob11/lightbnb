@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  email_address VARCHAR(255),
+  password VARCHAR(255)
+);
+
