@@ -23,10 +23,11 @@ VALUES
 ('2023-10-01', '2023-10-14', 1, 3)
 ;
 
--- property_reviews
-
--- `guest_id` | `property_id` | `reservation_id` | `rating` | `message`
--- -----------|---------------|------------------|----------|---------
--- 3 |             2 |                1 |        3 | messages
--- 2 |             2 |                2 |        4 | messages
--- 3 |             1 |                3 |        4 | messages
+INSERT INTO property_reviews(
+guest_id, property_id, reservation_id, rating, message
+)
+VALUES
+(3, 2, 1, 3, 'message'),
+(2, 2, 2, 4, 'message'),
+(3, 1, 3, 4, 'message')
+;
