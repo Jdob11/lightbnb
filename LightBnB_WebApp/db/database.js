@@ -131,20 +131,66 @@ const getAllReservations = function (guest_id, limit = 10) {
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = (options, limit = 10) => {
+  const queryParams = [];
+  const whereConditions = [];
 
-  return pool
-    .query(
-      `
-      SELECT * FROM properties
-      LIMIT $1
-      `,
-      [limit])
+  let queryString = `
+  SELECT properties.*, avg(property_reviews.rating) as average_rating
+  FROM properties
+  JOIN property_reviews ON properties.id = property_id
+  `;
+
+  if (options) {
+    if (options.city) {
+      queryParams.push(`%${options.city}%`);
+      whereConditions.push(`city LIKE $${queryParams.length}`)
+    }
+
+    if (options.owner_id) {
+      queryParams.push(`${options.owner_id}`);
+      whereConditions.push(`owner_id = $${queryParams.length}`)
+    }
+
+    if (options.minimum_price_per_night) {
+      const priceInDollars = options.minimum_price_per_night * 100;
+      queryParams.push(`${priceInDollars}`);
+      whereConditions.push(`cost_per_night > $${queryParams.length}`)
+    }
+
+    if (options.maximum_price_per_night) {
+      const priceInDollars = options.maximum_price_per_night * 100;
+      queryParams.push(`${priceInDollars}`);
+      whereConditions.push(`cost_per_night < $${queryParams.length}`)
+    }
+
+  }
+  
+  if (whereConditions.length > 0) {
+    queryString += `WHERE ${whereConditions.join('\nAND ')} `
+  }
+
+  queryString += `\nGROUP BY properties.id `
+
+  if (options.minimum_rating) {
+    queryParams.push(`${options.minimum_rating}`);
+    queryString += `\nHAVING AVG(property_reviews.rating) > $${queryParams.length}`;
+  }
+
+  queryParams.push(limit);
+  queryString += `
+  ORDER BY cost_per_night
+  LIMIT $${queryParams.length};
+  `;
+
+  console.log(queryString, queryParams);
+
+  return pool.query(queryString, queryParams)
     .then((result) => {
-      // console.log(result.rows);
       return result.rows
     })
     .catch((err) => {
       console.log(err.message);
+      return Promise.reject(err);
     });
 };
 
