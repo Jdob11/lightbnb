@@ -9,47 +9,81 @@ const pool = new Pool({
   database: "lightbnb",
 });
 
-// the following assumes that you named your connection variable `pool`
-// pool.query(`SELECT title FROM properties LIMIT 10;`).then(response => {console.log(response)})
-
 /// Users
 
 /**
  * Get a single user from the database given their email.
  * @param {String} email The email of the user.
- * @return {Promise<{}>} A promise to the user.
+ * @return {Promise<Object|null>} A promise resolving to the user object if found, or null if not found.
  */
-const getUserWithEmail = function (email) {
-  let resolvedUser = null;
-  for (const userId in users) {
-    const user = users[userId];
-    if (user && user.email.toLowerCase() === email.toLowerCase()) {
-      resolvedUser = user;
-    }
-  }
-  return Promise.resolve(resolvedUser);
+
+const getUserWithEmail = (email) => {
+
+  return pool
+    .query(
+      `
+      SELECT * FROM users
+      WHERE email = $1
+      LIMIT 1
+      `,
+      [email])
+    .then((result) => {
+      return result.rows.length > 0 ? result.rows[0] : null;
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 
 /**
  * Get a single user from the database given their id.
  * @param {string} id The id of the user.
- * @return {Promise<{}>} A promise to the user.
+ * @return {Promise<Object|null>} A promise resolving to the user object if found, or null if not found.
  */
 const getUserWithId = function (id) {
-  return Promise.resolve(users[id]);
+
+  return pool
+  .query(
+    `
+    SELECT * FROM users
+    WHERE id = $1
+    LIMIT 1
+    `,
+    [id])
+  .then((result) => {
+    return result.rows.length > 0 ? result.rows[0] : null;
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
 };
 
 /**
  * Add a new user to the database.
  * @param {{name: string, password: string, email: string}} user
- * @return {Promise<{}>} A promise to the user.
+ * @return {Promise<Object|null>} A promise resolving to the user object if found, or null if not found.
  */
 const addUser = function (user) {
-  const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+  const { name, email, password} = user;
+  return pool
+  .query(
+    `
+    INSERT INTO users (
+      name, email, password) 
+      VALUES (
+      $1, $2, $3)
+      RETURNING *;
+    `,
+    [name, email, password])
+  .then((result) => {
+    return result.rows.length > 0 ? result.rows[0] : null;
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
 };
+
+
 
 /// Reservations
 
@@ -80,7 +114,7 @@ const getAllProperties = (options, limit = 10) => {
       `,
       [limit])
     .then((result) => {
-      console.log(result.rows);
+      // console.log(result.rows);
       return result.rows
     })
     .catch((err) => {
