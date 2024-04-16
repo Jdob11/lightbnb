@@ -93,7 +93,7 @@ const addUser = function (user) {
 /**
  * Get all reservations for a single user.
  * @param {string} guest_id The id of the user.
- * @return {Promise<[{}]>} A promise to the reservations.
+ * @return {Promise<Object|null>} A promise resolving to an array of user reservations if found, or null if not found.
  */
 const getAllReservations = function (guest_id, limit = 10) {
   
