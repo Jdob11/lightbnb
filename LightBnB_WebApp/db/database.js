@@ -152,14 +152,14 @@ const getAllProperties = (options, limit = 10) => {
     }
 
     if (options.minimum_price_per_night) {
-      const priceInDollars = options.minimum_price_per_night * 100;
-      queryParams.push(`${priceInDollars}`);
+      const minPriceInCents = options.minimum_price_per_night * 100;
+      queryParams.push(`${minPriceInCents}`);
       whereConditions.push(`cost_per_night >= $${queryParams.length}`)
     }
 
     if (options.maximum_price_per_night) {
-      const priceInDollars = options.maximum_price_per_night * 100;
-      queryParams.push(`${priceInDollars}`);
+      const MaxPriceInCents = options.maximum_price_per_night * 100;
+      queryParams.push(`${MaxPriceInCents}`);
       whereConditions.push(`cost_per_night <= $${queryParams.length}`)
     }
 
