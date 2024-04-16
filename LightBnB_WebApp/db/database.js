@@ -63,7 +63,7 @@ const getUserWithId = function (id) {
 /**
  * Add a new user to the database.
  * @param {{name: string, password: string, email: string}} user
- * @return {Promise<Object|null>} A promise resolving to the user object if found, or null if not found.
+ * @return {Promise<Object|null>} A promise resolving to the user object if found, or null no info is given.
  */
 const addUser = function (user) {
   const { name, email, password} = user;
@@ -128,7 +128,7 @@ const getAllReservations = function (guest_id, limit = 10) {
  * Get all properties.
  * @param {{}} options An object containing query options.
  * @param {*} limit The number of results to return.
- * @return {Promise<[{}]>}  A promise to the properties.
+ * @return {Promise<[{}]>}  A promise resolving to an array of property objects based on user filters
  */
 const getAllProperties = (options, limit = 10) => {
   const queryParams = [];
@@ -195,7 +195,7 @@ const getAllProperties = (options, limit = 10) => {
 /**
  * Add a property to the database
  * @param {{}} property An object containing all of the property details.
- * @return {Promise<{}>} A promise to the property.
+ * @return @return {Promise<Object|null>} A promise resolving to the property object if found, or null no info is given.
  */
 const addProperty = function (property) {
   const {
