@@ -154,13 +154,13 @@ const getAllProperties = (options, limit = 10) => {
     if (options.minimum_price_per_night) {
       const priceInDollars = options.minimum_price_per_night * 100;
       queryParams.push(`${priceInDollars}`);
-      whereConditions.push(`cost_per_night > $${queryParams.length}`)
+      whereConditions.push(`cost_per_night >= $${queryParams.length}`)
     }
 
     if (options.maximum_price_per_night) {
       const priceInDollars = options.maximum_price_per_night * 100;
       queryParams.push(`${priceInDollars}`);
-      whereConditions.push(`cost_per_night < $${queryParams.length}`)
+      whereConditions.push(`cost_per_night <= $${queryParams.length}`)
     }
 
   }
@@ -173,7 +173,7 @@ const getAllProperties = (options, limit = 10) => {
 
   if (options.minimum_rating) {
     queryParams.push(`${options.minimum_rating}`);
-    queryString += `\nHAVING AVG(property_reviews.rating) > $${queryParams.length}`;
+    queryString += `\nHAVING AVG(property_reviews.rating) >= $${queryParams.length}`;
   }
 
   queryParams.push(limit);
