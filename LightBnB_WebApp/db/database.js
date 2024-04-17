@@ -1,13 +1,4 @@
-const properties = require("./json/properties.json");
-const users = require("./json/users.json");
-const { Pool } = require("pg");
-
-const pool = new Pool({
-  user: "labber",
-  password: "labber",
-  host: "localhost",
-  database: "lightbnb",
-});
+const { query } = require('./index.js')
 
 /// Users
 
@@ -19,8 +10,7 @@ const pool = new Pool({
 
 const getUserWithEmail = (email) => {
 
-  return pool
-    .query(
+  return query(
       `
       SELECT * FROM users
       WHERE email = $1
@@ -43,8 +33,7 @@ const getUserWithEmail = (email) => {
  */
 const getUserWithId = function (id) {
 
-  return pool
-  .query(
+  return query(
     `
     SELECT * FROM users
     WHERE id = $1
@@ -67,8 +56,7 @@ const getUserWithId = function (id) {
  */
 const addUser = function (user) {
   const { name, email, password} = user;
-  return pool
-  .query(
+  return query(
     `
     INSERT INTO users (
       name, email, password) 
@@ -97,8 +85,7 @@ const addUser = function (user) {
  */
 const getAllReservations = function (guest_id, limit = 10) {
   
-  return pool
-  .query(
+  return query(
     `
     SELECT  reservations.*,
     properties.*,
@@ -178,11 +165,11 @@ const getAllProperties = (options, limit = 10) => {
 
   queryParams.push(limit);
   queryString += `
-  ORDER BY cost_per_night
+  ORDER BY properties.cost_per_night
   LIMIT $${queryParams.length};
   `;
 
-  return pool.query(queryString, queryParams)
+  return query(queryString, queryParams)
     .then((result) => {
       return result.rows
     })
@@ -214,8 +201,7 @@ const addProperty = function (property) {
     number_of_bathrooms,
     number_of_bedrooms
   } = property;
-  return pool
-  .query(
+  return query(
     `
     INSERT INTO properties (
       owner_id,
