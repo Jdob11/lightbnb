@@ -139,6 +139,19 @@ const getAllProperties = (options, limit = 10) => {
       whereConditions.push(`owner_id = $${queryParams.length}`);
     }
 
+    // code for Compass requirement of returning results between min and max when both are given
+
+    // if ( options.minimum_price_per_night && options.maximum_price_per_night) {
+    //   const minPriceInCents = options.minimum_price_per_night * 100;
+    //   queryParams.push(`${minPriceInCents}`);
+    //   whereConditions.push(`cost_per_night BETWEEN $${queryParams.length}`);
+    //   const maxPriceInCents = options.maximum_price_per_night * 100;
+    //   queryParams.push(`${maxPriceInCents}`);
+    //   whereConditions.push(`$${queryParams.length}`);
+    // }
+
+    // code for increased functionality of letting user set min cost, max cost or both, and filter appropriately
+    
     if (options.minimum_price_per_night) {
       const minPriceInCents = options.minimum_price_per_night * 100;
       queryParams.push(`${minPriceInCents}`);
@@ -146,8 +159,8 @@ const getAllProperties = (options, limit = 10) => {
     }
 
     if (options.maximum_price_per_night) {
-      const MaxPriceInCents = options.maximum_price_per_night * 100;
-      queryParams.push(`${MaxPriceInCents}`);
+      const maxPriceInCents = options.maximum_price_per_night * 100;
+      queryParams.push(`${maxPriceInCents}`);
       whereConditions.push(`cost_per_night <= $${queryParams.length}`);
     }
 
