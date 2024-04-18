@@ -10,14 +10,14 @@ const { query } = require('./index.js');
  */
 
 const getUserWithEmail = (email) => {
-
+  const lowercaseEmail = email.toLowerCase();
   return query(
     `
       SELECT * FROM users
       WHERE email = $1
       LIMIT 1
       `,
-    [email])
+    [lowercaseEmail])
     .then((result) => {
       return result.rows.length > 0 ? result.rows[0] : null;
     })
@@ -57,6 +57,7 @@ const getUserWithId = (id) => {
  */
 const addUser = (user) => {
   const { name, email, password} = user;
+  const lowercaseEmail = email.toLowerCase();
   return query(
     `
     INSERT INTO users (
@@ -65,7 +66,7 @@ const addUser = (user) => {
       $1, $2, $3)
       RETURNING *;
     `,
-    [name, email, password])
+    [name, lowercaseEmail, password])
     .then((result) => {
       return result.rows.length > 0 ? result.rows[0] : null;
     })
@@ -151,7 +152,7 @@ const getAllProperties = (options, limit = 10) => {
     // }
 
     // code for increased functionality of letting user set min cost, max cost or both, and filter appropriately
-    
+
     if (options.minimum_price_per_night) {
       const minPriceInCents = options.minimum_price_per_night * 100;
       queryParams.push(`${minPriceInCents}`);
