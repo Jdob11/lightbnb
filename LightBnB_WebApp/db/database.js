@@ -1,4 +1,5 @@
-const { query } = require('./index.js')
+/* eslint-disable camelcase */
+const { query } = require('./index.js');
 
 /// Users
 
@@ -11,12 +12,12 @@ const { query } = require('./index.js')
 const getUserWithEmail = (email) => {
 
   return query(
-      `
+    `
       SELECT * FROM users
       WHERE email = $1
       LIMIT 1
       `,
-      [email])
+    [email])
     .then((result) => {
       return result.rows.length > 0 ? result.rows[0] : null;
     })
@@ -40,13 +41,13 @@ const getUserWithId = (id) => {
     LIMIT 1
     `,
     [id])
-  .then((result) => {
-    return result.rows.length > 0 ? result.rows[0] : null;
-  })
-  .catch((err) => {
-    console.log(err.message);
-    return Promise.reject(err);
-  });
+    .then((result) => {
+      return result.rows.length > 0 ? result.rows[0] : null;
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return Promise.reject(err);
+    });
 };
 
 /**
@@ -65,13 +66,13 @@ const addUser = (user) => {
       RETURNING *;
     `,
     [name, email, password])
-  .then((result) => {
-    return result.rows.length > 0 ? result.rows[0] : null;
-  })
-  .catch((err) => {
-    console.log(err.message);
-    return Promise.reject(err);
-  });
+    .then((result) => {
+      return result.rows.length > 0 ? result.rows[0] : null;
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return Promise.reject(err);
+    });
 };
 
 
@@ -107,7 +108,7 @@ const getAllReservations = (guest_id, limit = 10) => {
       console.log(err.message);
       return Promise.reject(err);
     });
-  };
+};
     
 /// Properties
 
@@ -130,33 +131,33 @@ const getAllProperties = (options, limit = 10) => {
   if (options) {
     if (options.city) {
       queryParams.push(`%${options.city}%`);
-      whereConditions.push(`city LIKE $${queryParams.length}`)
+      whereConditions.push(`city LIKE $${queryParams.length}`);
     }
 
     if (options.owner_id) {
       queryParams.push(`${options.owner_id}`);
-      whereConditions.push(`owner_id = $${queryParams.length}`)
+      whereConditions.push(`owner_id = $${queryParams.length}`);
     }
 
     if (options.minimum_price_per_night) {
       const minPriceInCents = options.minimum_price_per_night * 100;
       queryParams.push(`${minPriceInCents}`);
-      whereConditions.push(`cost_per_night >= $${queryParams.length}`)
+      whereConditions.push(`cost_per_night >= $${queryParams.length}`);
     }
 
     if (options.maximum_price_per_night) {
       const MaxPriceInCents = options.maximum_price_per_night * 100;
       queryParams.push(`${MaxPriceInCents}`);
-      whereConditions.push(`cost_per_night <= $${queryParams.length}`)
+      whereConditions.push(`cost_per_night <= $${queryParams.length}`);
     }
 
   }
   
   if (whereConditions.length > 0) {
-    queryString += `WHERE ${whereConditions.join('\nAND ')} `
+    queryString += `WHERE ${whereConditions.join('\nAND ')} `;
   }
 
-  queryString += `\nGROUP BY properties.id `
+  queryString += `\nGROUP BY properties.id `;
 
   if (options.minimum_rating) {
     queryParams.push(`${options.minimum_rating}`);
@@ -171,7 +172,7 @@ const getAllProperties = (options, limit = 10) => {
 
   return query(queryString, queryParams)
     .then((result) => {
-      return result.rows
+      return result.rows;
     })
     .catch((err) => {
       console.log(err.message);
@@ -238,13 +239,13 @@ const addProperty = (property) => {
       number_of_bathrooms,
       number_of_bedrooms
     ])
-  .then((result) => {
-    return result.rows.length > 0 ? result.rows[0] : null;
-  })
-  .catch((err) => {
-    console.log(err.message);
-    return Promise.reject(err);
-  });
+    .then((result) => {
+      return result.rows.length > 0 ? result.rows[0] : null;
+    })
+    .catch((err) => {
+      console.log(err.message);
+      return Promise.reject(err);
+    });
 };
 
 module.exports = {
