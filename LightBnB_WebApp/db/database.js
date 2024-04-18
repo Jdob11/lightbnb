@@ -31,7 +31,7 @@ const getUserWithEmail = (email) => {
  * @param {string} id The id of the user.
  * @return {Promise<Object|null>} A promise resolving to the user object if found, or null if not found.
  */
-const getUserWithId = function (id) {
+const getUserWithId = (id) => {
 
   return query(
     `
@@ -54,7 +54,7 @@ const getUserWithId = function (id) {
  * @param {{name: string, password: string, email: string}} user
  * @return {Promise<Object|null>} A promise resolving to the user object if found, or null no info is given.
  */
-const addUser = function (user) {
+const addUser = (user) => {
   const { name, email, password} = user;
   return query(
     `
@@ -83,7 +83,7 @@ const addUser = function (user) {
  * @param {string} guest_id The id of the user.
  * @return {Promise<Object|null>} A promise resolving to an array of user reservations if found, or null if not found.
  */
-const getAllReservations = function (guest_id, limit = 10) {
+const getAllReservations = (guest_id, limit = 10) => {
   
   return query(
     `
@@ -184,7 +184,7 @@ const getAllProperties = (options, limit = 10) => {
  * @param {{}} property An object containing all of the property details.
  * @return @return {Promise<Object|null>} A promise resolving to the property object if found, or null no info is given.
  */
-const addProperty = function (property) {
+const addProperty = (property) => {
   const {
     owner_id,
     title,
